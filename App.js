@@ -5,12 +5,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  TextInput,
   Pressable,
   FlatList,
 } from "react-native";
 import { ValidationModal } from "./src/components/ValidationModal";
+import { ProductItem } from "./src/components/ProductItem";
+import { CartComponent } from "./src/components/CartComponent";
+import { TextImputComponent } from "./src/components/TextImputComponent";
 
 const DATA = [
   {
@@ -33,6 +34,7 @@ export default function App() {
   const [cartItems, setCartItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemSelected, setItemSelected] = useState(null);
+  const [productSelected, setProductSelected] = useState(null);
 
   const handleAddCounter = () => {
     setCounter(counter + 1);
@@ -42,9 +44,10 @@ export default function App() {
     setImputValue(value);
   };
 
-  const handleModal = (id) => {
+  const handleModal = (item) => {
     setModalVisible(true);
-    setItemSelected(id);
+    setItemSelected(item.id);
+    setProductSelected(item.name);
   };
 
   const addItem = () => {
@@ -65,49 +68,23 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <ValidationModal
-        title={"Quieres eliminar el producto?"}
+        title={`Quieres eliminar ${productSelected}?`}
         visible={modalVisible}
         onRemove={removeItem}
         onClose={() => setModalVisible(false)}
       />
-      <View style={styles.cartContainer}>
-        <Text>CARRITO</Text>
-        <Image
-          style={{ width: 50, height: 50 }}
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/3144/3144456.png",
-          }}
-        />
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TextInput
-          value={imputValue}
-          onChangeText={handleImputChange}
-          style={styles.textImput}
-          placeholder="Ingrese un producto"
-        />
-        <Pressable onPress={addItem}>
-          <Text style={{ fontSize: 40 }}>+</Text>
-        </Pressable>
-      </View>
-
+      <CartComponent />
+      <TextImputComponent
+        value={imputValue}
+        placeholder={"Ingrese un producto"}
+        onChangeText={handleImputChange}
+        onButtonPress={addItem}
+      />
       <View style={styles.productList}>
         <FlatList
           data={cartItems}
           renderItem={({ item }) => (
-            <View data-testId={"itemBox"} style={styles.itemBox}>
-              <Text style={styles.product}>{item.name}</Text>
-              <Pressable onPress={() => handleModal(item.id)}>
-                <Text style={{ fontSize: 30, justifyContent: "center" }}>
-                  <Image
-                    style={{ width: 20, height: 20 }}
-                    source={{
-                      uri: "https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png",
-                    }}
-                  ></Image>
-                </Text>
-              </Pressable>
-            </View>
+            <ProductItem item={item} handleModal={handleModal} />
           )}
           keyExtractor={(item) => item.id}
         />
@@ -135,31 +112,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: Constants.statusBarHeight,
   },
-  product: { fontSize: 16, fontWeight: "bold", padding: 4 },
   productList: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 10,
-  },
-  cartContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 8,
-    alignItems: "center",
-  },
-  textImput: {
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "90%",
-  },
-  itemBox: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: "lightgray",
   },
 });
