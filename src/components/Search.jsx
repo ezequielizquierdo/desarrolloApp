@@ -28,10 +28,10 @@ export default function Search({ onSearch }) {
                     value={input}
                     onChangeText={setInput}
                     placeholder='Buscar' />
-                <Pressable>
+                <Pressable onPress={handleSearch}>
                     <AntDesign name='search1' size={25} color="black" />
                 </Pressable>
-                <Pressable>
+                <Pressable onPress={removeInput}>
                     <Entypo name='circle-with-cross' size={25} color={"black"}/>
                 </Pressable>
             </View>

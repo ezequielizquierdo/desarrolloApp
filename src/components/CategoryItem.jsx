@@ -17,6 +17,8 @@ export default function CategoryItem({ category, setCategorySelected }) {
 const styles = StyleSheet.create({
   text: {
     fontSize: 25,
-    fontFamily: "InterRegular"
+    fontFamily: "InterRegular",
+    textAlign: "center"
+
   },
 });
